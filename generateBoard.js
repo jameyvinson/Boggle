@@ -22,16 +22,21 @@ function generateBoard(m, n) {
 }
 
 function main() {
-  let i = 4, j = 4 // default dimensions are 4x4
+  let i = 4, j = 4; // default dimensions are 4x4
 
   // check that the arguments are valid
   if(process.argv.length == 4 && !isNaN(process.argv[2]) && !isNaN(process.argv[3]) && process.argv[2] > 0 && process.argv[3] > 0) {
-    i = process.argv[2]
-    j = process.argv[3]
+    i = process.argv[2];
+    j = process.argv[3];
   } 
   
-  board = generateBoard(i,j)
-  console.log(board)
+  board = generateBoard(i,j);
+  console.log(board);
+
+  // write the board to file board.txt
+  fs.writeFile('board.txt', JSON.stringify(board), (err) => {
+    if (err) throw err;
+  })
 }
 
 main()

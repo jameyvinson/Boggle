@@ -1,5 +1,5 @@
-// to run: node .\generateBoard.js numberOfRows numberOfColumns
-// if i and j are not supplied, default values are 4
+// to run: node .\generateBoard.js numberOfColummns numberOfRows
+// if columns and rows are not supplied, default values are 4
 const fs = require('fs');
 
 // given the dimensions of the board, m = cols and n = rows,
@@ -26,11 +26,11 @@ function main() {
 
   // check that the arguments are valid
   if(process.argv.length == 4 && !isNaN(process.argv[2]) && !isNaN(process.argv[3]) && process.argv[2] > 0 && process.argv[3] > 0) {
-    i = process.argv[2];
-    j = process.argv[3];
+    m = process.argv[2];
+    n = process.argv[3];
   } 
   
-  board = generateBoard(i,j);
+  board = generateBoard(m,n);
   console.log(board);
 
   // write the board to file board.txt

@@ -42,6 +42,26 @@ function getBoard() {
   return board;
 }
 
+function getWords(m, n) {
+  console.log("getWords");
+  let fileName = process.argv[3]; // word-list was provided as a command line argument
+
+  try {
+    // take out all words that are longer than m*n  (longest word possible on mxn grid)
+    let wordsList = fs
+      .readFileSync(fileName, "utf-8")
+      .split(",")
+      .filter((w) => w.length <= m * n);
+
+    return wordsList;
+  } catch (err) {
+    console.log(
+      `Error reading from file "${fileName}". Try a different file name?`
+    );
+    return null;
+  }
+}
+
 // check that the number of arguments is correct
 function checkArgs() {
   if (process.argv.length !== 4) {
@@ -65,6 +85,8 @@ function main() {
   }
 
   console.log(board);
+
+  console.log(getWords(board.length, board[0].length));
 }
 
 main();

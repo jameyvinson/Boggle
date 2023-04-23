@@ -3,6 +3,8 @@
  * generates an mxn matrix of random alphabetical characters, and prints
  * this matrix to a text file, board.txt
  *
+ * to run: node .\generateBoard.js numberColumns numberRows
+ *
  * Jamey Vinson
  * April 22, 2023
  *

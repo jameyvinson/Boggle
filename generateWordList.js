@@ -14,8 +14,16 @@ const fs = require("fs");
 const words = require("an-array-of-english-words");
 
 function main() {
-  // write the board to file board.txt
-  fs.writeFile("words.txt", JSON.stringify(words), (err) => {
+  // first, delete any data in an existing file named "words.txt"
+  if (fs.existsSync("words.txt")) {
+    fs.truncate("words.txt", 0, (err) => {
+      if (err) throw err;
+    });
+  }
+
+  // write the words to file words.txt string by string, separated by spaces
+
+  fs.appendFile("words.txt", words.toString(), (err) => {
     if (err) throw err;
   });
 }

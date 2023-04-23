@@ -1,31 +1,70 @@
 const fs = require("fs");
-const { exit } = require("process");
+let words = require("an-array-of-english-words");
 
-function main() {
-  board = getBoard();
-  if (board == null) {
-    return; // stop execution; error reading from file
-  }
-}
-
+// read board from given filename (default board.txt) and return the board in a
+// 2D matrix
 function getBoard() {
-  let fileName = "board.txt"; // default
-  if (process.argv.length == 3) {
-    fileName = process.argv[2]; // get file name from CLAs, if applicable
-  }
+  console.log("getBoard");
+  let fileName = process.argv[2]; // get file name from CLAs
 
-  const readFileLines = (fileName) =>
-    fs.readFileSync(fileName).toString("utf-8").split(" ");
+  let board = []; // will contain elements from file
+  let row = 0,
+    column = 0;
 
+  let allFileContents = "";
   try {
-    let board = readFileLines(fileName);
-    return board;
+    allFileContents = fs.readFileSync(fileName, "utf-8");
   } catch (err) {
     console.log(
       `Error reading from file "${fileName}". Try a different file name?`
     );
     return null;
   }
+
+  // populate the board with the rows and columns in the file
+  // rows are separated by new line characters
+  allFileContents.split("\n").forEach((line) => {
+    // check for last line
+    if (line === "") return false;
+
+    column = 0; // always start at column 0
+    board[row] = []; // is row is a array
+
+    // add each letter in the row to the board
+    line.split(",").forEach((letter) => {
+      board[row][column] = letter;
+      column++;
+    });
+
+    row++; // increment row
+  });
+
+  return board;
+}
+
+// check that the number of arguments is correct
+function checkArgs() {
+  if (process.argv.length !== 4) {
+    console.log("Incorrect number of arguments.");
+    console.log("node .\\index.js boggleBoardFile wordsListFile");
+    return 0;
+  }
+  return 1;
+}
+
+function main() {
+  // check that the correct arguments are provided
+  if (!checkArgs()) {
+    return;
+  }
+
+  board = getBoard();
+
+  if (board == null) {
+    return; // stop execution; error reading from file
+  }
+
+  console.log(board);
 }
 
 main();

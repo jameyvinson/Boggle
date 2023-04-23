@@ -15,7 +15,7 @@ const fs = require("fs");
 // return: mxn matrix of random letters
 function generateBoard(m, n) {
   // alphabet of uppercase letters
-  var alphabet = "ABCDEFGHIJKLMNOPQUSTUVWXYZ";
+  var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   // board will be
   var board = [];

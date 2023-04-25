@@ -66,15 +66,13 @@ function findStartingLetter(board, words) {
   // cycle through all the letters on the board, element by element
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
-      // create and populate a "dirty bit" matrix, which will inidicate which
-      // elements have already been added to a word
-      // 1 = added, 0 = not added yet
-      let dirtyBitMat = Array(board.length)
-        .fill()
-        .map(() => Array(board[0].length).fill(0));
+      // to ensure we don't go back to a space we've used before, keep a list of
+      // the locations in the matrix that are in our current word, where each
+      // location is represented by a number: i*board.length + j
+      let usedSpaces = [];
 
       // find all the words that begin with this [i,j]th element
-      findWords(board, i, j, "", dirtyBitMat, words, foundWords);
+      findWords(board, i, j, "", usedSpaces, words, foundWords);
     }
   }
 
@@ -94,22 +92,34 @@ function isValidPrefix(words, currStr) {
   return isValidPrefix;
 }
 
-function findWords(board, i, j, currStr, dirtyBitMat, validWords, foundWords) {
+function findWords(
+  board,
+  i,
+  j,
+  currStr,
+  usedSpacesOriginal,
+  validWords,
+  foundWords
+) {
+  // the number associated with the current [i,j]th space
+  let currIndexNum = i * board.length + j;
+
   // check for invalidity (out of bounds indeces, invalid dirty bit)
   if (
     i === board.length ||
     j === board[0].length ||
     j < 0 ||
     i < 0 ||
-    dirtyBitMat[i][j] === 1
+    usedSpacesOriginal.includes(currIndexNum)
   ) {
     return; // no need to return the found words list, it's passed by reference
   }
 
   // "slice" the array so that it doesn't pass by reference
-  var dirtyBitMatCpy = dirtyBitMat.map((arr) => arr.slice());
+  var usedSpaces = usedSpacesOriginal.slice();
 
-  dirtyBitMatCpy[i][j] = 1; // show we've been to this index before
+  // we've "used" this space; push it to our usedSpaces list
+  usedSpaces.push(currIndexNum);
   currStr += board[i][j]; // add current letter to our string
 
   // check to see if this new string is even a valid prefix
@@ -125,104 +135,15 @@ function findWords(board, i, j, currStr, dirtyBitMat, validWords, foundWords) {
 
   // now, recursively go every direction from this [i,j]th position, to test
   // all possible strings
-  findWords(board, i + 1, j, currStr, dirtyBitMatCpy, validWords, foundWords); // down
-  findWords(board, i, j + 1, currStr, dirtyBitMatCpy, validWords, foundWords); // right
-  findWords(board, i - 1, j, currStr, dirtyBitMatCpy, validWords, foundWords); // up
-  findWords(board, i, j - 1, currStr, dirtyBitMatCpy, validWords, foundWords); // left
-  findWords(
-    board,
-    i - 1,
-    j - 1,
-    currStr,
-    dirtyBitMatCpy,
-    validWords,
-    foundWords
-  ); // up, left
-  findWords(
-    board,
-    i + 1,
-    j + 1,
-    currStr,
-    dirtyBitMatCpy,
-    validWords,
-    foundWords
-  ); // down, right
-  findWords(
-    board,
-    i - 1,
-    j + 1,
-    currStr,
-    dirtyBitMatCpy,
-    validWords,
-    foundWords
-  ); // up, right
-  findWords(
-    board,
-    i + 1,
-    j - 1,
-    currStr,
-    dirtyBitMatCpy,
-    validWords,
-    foundWords
-  ); // down, left
+  findWords(board, i + 1, j, currStr, usedSpaces, validWords, foundWords); // down
+  findWords(board, i, j + 1, currStr, usedSpaces, validWords, foundWords); // right
+  findWords(board, i - 1, j, currStr, usedSpaces, validWords, foundWords); // up
+  findWords(board, i, j - 1, currStr, usedSpaces, validWords, foundWords); // left
+  findWords(board, i - 1, j - 1, currStr, usedSpaces, validWords, foundWords); // up, left
+  findWords(board, i + 1, j + 1, currStr, usedSpaces, validWords, foundWords); // down, right
+  findWords(board, i - 1, j + 1, currStr, usedSpaces, validWords, foundWords); // up, right
+  findWords(board, i + 1, j - 1, currStr, usedSpaces, validWords, foundWords); // down, left
 }
-
-// function findWords1(board, i, j, currStr, dirtyBitMat) {
-//   // the "word" we are working on
-//   console.log(currStr);
-
-//   // if currStr is in the words list, then add it to the words list (?)
-//   if (i < board.length - 1 && dirtyBitMat[i + 1][j] === 0) {
-//     // update this new element to the word
-//     currStr += board[i + 1][j];
-
-//     // update the db matrix, to show we've "been" at this element (1 == "touched")
-//     dirtyBitMat[i + 1][j] = 1;
-
-//     console.log(
-//       `i = ${
-//         i + 1
-//       }, j = ${j}, currstr = ${currStr}, dirtyBitMat = ${dirtyBitMat}`
-//     );
-//     console.log(`board.length: ${board.length}`);
-//     // call the findWords method again, with updated values
-//     findWords(board, i + 1, j, currStr, dirtyBitMat);
-//   }
-
-//   if (j < board[0].length - 1 && dirtyBitMat[i][j + 1] === 0) {
-//     currStr += board[i][j + 1];
-//     dirtyBitMat[i][j + 1] = 1;
-//     findWords(board, i, j + 1, currStr, dirtyBitMat);
-//   }
-
-//   if (i > 0 && dirtyBitMat[i - 1][j] === 0) {
-//     currStr += board[i - 1][j];
-//     dirtyBitMat[i - 1][j] = 1;
-//     findWords(board, i - 1, j, currStr, dirtyBitMat);
-//   }
-
-//   if (j > 0 && dirtyBitMat[i][j - 1] === 0) {
-//     currStr += board[i][j - 1];
-//     dirtyBitMat[i][j - 1] = 1;
-//     findWords(board, i, j - 1, currStr, dirtyBitMat);
-//   }
-
-//   if (i > 0 && j > 0 && dirtyBitMat[i - 1][j - 1] === 0) {
-//     currStr += board[i - 1][j - 1];
-//     dirtyBitMat[i - 1][j - 1] = 1;
-//     findWords(board, i - 1, j - 1, currStr, dirtyBitMat);
-//   }
-
-//   if (
-//     i < board.length - 1 &&
-//     j < board[0].length - 1 &&
-//     dirtyBitMat[i + 1][j + 1] === 0
-//   ) {
-//     currStr += board[i + 1][j + 1];
-//     dirtyBitMat[i + 1][j + 1] = 1;
-//     findWords(board, i + 1, j + 1, currStr, dirtyBitMat);
-//   }
-// }
 
 // check that the number of arguments is correct
 function checkArgs() {

@@ -11,10 +11,12 @@
  */
 
 const fs = require("fs");
-const words = require("an-array-of-english-words");
+const words = require("wordlist-english");
 
 function main() {
   // first, delete any data in an existing file named "words.txt"
+  var englishWords = words["english"];
+
   if (fs.existsSync("words.txt")) {
     fs.truncate("words.txt", 0, (err) => {
       if (err) throw err;
@@ -23,7 +25,7 @@ function main() {
 
   // write the words to file words.txt string by string, separated by spaces
 
-  fs.appendFile("words.txt", words.toString(), (err) => {
+  fs.appendFile("words.txt", englishWords.toString(), (err) => {
     if (err) throw err;
   });
 }

@@ -61,29 +61,41 @@ function getWords(m, n) {
 }
 
 function findStartingLetter(board, words) {
-  // cycle through all the letters on the board, finding all possible
-  // words that begin with those letters
+  let foundWords = [];
+
+  // cycle through all the letters on the board, element by element
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       // create and populate a "dirty bit" matrix, which will inidicate which
       // elements have already been added to a word
-      let dirtyBitMat = [];
-      for (k = 0; k < board.length; k++) {
-        dirtyBitMat[k] = [];
-        for (l = 0; l < board[0].length; l++) {
-          dirtyBitMat[k][l] = 0; // all initial values are 0, untouched
-        }
-      }
+      // 1 = added, 0 = not added yet
+      let dirtyBitMat = Array(board.length)
+        .fill()
+        .map(() => Array(board[0].length).fill(0));
 
-      findWords(board, i, j, "", dirtyBitMat, words);
-      // console.log(dirtyBitMat);
+      // find all the words that begin with this [i,j]th element
+      findWords(board, i, j, "", dirtyBitMat, words, foundWords);
     }
   }
+
+  return foundWords;
 }
 
-function findWords(board, i, j, currStr, dirtyBitMat, words) {
+function isValidPrefix(words, currStr) {
+  let isValidPrefix = false; // default value is false
+
+  // check each word in the words list to see if currStr is a prefix of any of them
+  for (let word of words) {
+    if (word.startsWith(currStr)) {
+      isValidPrefix = true; // we've found a word that begins with currStr
+      break;
+    }
+  }
+  return isValidPrefix;
+}
+
+function findWords(board, i, j, currStr, dirtyBitMat, validWords, foundWords) {
   // check for invalidity (out of bounds indeces, invalid dirty bit)
-  // TODO: add in invalid prefix
   if (
     i === board.length ||
     j === board[0].length ||
@@ -91,33 +103,68 @@ function findWords(board, i, j, currStr, dirtyBitMat, words) {
     i < 0 ||
     dirtyBitMat[i][j] === 1
   ) {
-    // return only the words that we have found so far
-    return;
+    return; // no need to return the found words list, it's passed by reference
   }
-
-  // if we've reached this point, continue onward!
 
   // "slice" the array so that it doesn't pass by reference
   var dirtyBitMatCpy = dirtyBitMat.map((arr) => arr.slice());
 
   dirtyBitMatCpy[i][j] = 1; // show we've been to this index before
-  currStr += board[i][j];
+  currStr += board[i][j]; // add current letter to our string
 
-  // TODO: if currStr is a word, add it to the foundWords
-  if (words.includes(currStr)) {
-    console.log(`found ${currStr}`);
+  // check to see if this new string is even a valid prefix
+  let isInvalidPrefix = !isValidPrefix(validWords, currStr);
+  if (isInvalidPrefix) {
+    return; // no need to follow this path!
   }
 
-  // console.log(currStr);
+  // if currStr is a word (and not already added), add it to the foundWords array
+  if (validWords.includes(currStr) && !foundWords.includes(currStr)) {
+    foundWords.push(currStr);
+  }
 
-  findWords(board, i + 1, j, currStr, dirtyBitMatCpy, words); // down
-  findWords(board, i, j + 1, currStr, dirtyBitMatCpy, words); // right
-  findWords(board, i - 1, j, currStr, dirtyBitMatCpy, words); // up
-  findWords(board, i, j - 1, currStr, dirtyBitMatCpy, words); // left
-  findWords(board, i - 1, j - 1, currStr, dirtyBitMatCpy, words); // up, left
-  findWords(board, i + 1, j + 1, currStr, dirtyBitMatCpy, words); // down, right
-  findWords(board, i - 1, j + 1, currStr, dirtyBitMatCpy, words); // up, right
-  findWords(board, i + 1, j - 1, currStr, dirtyBitMatCpy, words); // down, left
+  // now, recursively go every direction from this [i,j]th position, to test
+  // all possible strings
+  findWords(board, i + 1, j, currStr, dirtyBitMatCpy, validWords, foundWords); // down
+  findWords(board, i, j + 1, currStr, dirtyBitMatCpy, validWords, foundWords); // right
+  findWords(board, i - 1, j, currStr, dirtyBitMatCpy, validWords, foundWords); // up
+  findWords(board, i, j - 1, currStr, dirtyBitMatCpy, validWords, foundWords); // left
+  findWords(
+    board,
+    i - 1,
+    j - 1,
+    currStr,
+    dirtyBitMatCpy,
+    validWords,
+    foundWords
+  ); // up, left
+  findWords(
+    board,
+    i + 1,
+    j + 1,
+    currStr,
+    dirtyBitMatCpy,
+    validWords,
+    foundWords
+  ); // down, right
+  findWords(
+    board,
+    i - 1,
+    j + 1,
+    currStr,
+    dirtyBitMatCpy,
+    validWords,
+    foundWords
+  ); // up, right
+  findWords(
+    board,
+    i + 1,
+    j - 1,
+    currStr,
+    dirtyBitMatCpy,
+    validWords,
+    foundWords
+  ); // down, left
 }
 
 // function findWords1(board, i, j, currStr, dirtyBitMat) {
@@ -201,7 +248,10 @@ function main() {
 
   words = getWords(board.length, board[0].length);
 
-  findStartingLetter(board, words);
+  // console.log(isValidPrefix(words, "abc"));
+  foundWords = findStartingLetter(board, words);
+
+  console.log(foundWords.toString());
 }
 
 main();

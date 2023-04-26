@@ -1,0 +1,23 @@
+{
+  "name": "boggle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jameyvinson/Boggle.git"
+  },
+  "author": "Jamey Vinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jameyvinson/Boggle/issues"
+  },
+  "homepage": "https://github.com/jameyvinson/Boggle#readme",
+  "dependencies": {
+    "an-array-of-english-words": "^2.0.0",
+    "wordlist-english": "^1.2.1"
+  }
+}

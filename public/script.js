@@ -1,5 +1,9 @@
-window.onload = () => {
-  let board = getBoard(); // load right away
+let dictionary = [];
+let board = [];
+
+window.onload = async () => {
+  board = await getBoard(); // load right away
+  dictionary = getDictionary();
 };
 
 // Read text from given filename and parse the text to create a 2D matrix
@@ -33,6 +37,18 @@ async function getBoard() {
   // Render the given board on the web UI.
   renderBoard(board);
   return board;
+}
+
+// Read the text from "words.txt" and parse the text into an array.
+// Return: Array of valid words.
+async function getDictionary() {
+  const wordsText = await readTextFile("/words.txt");
+
+  wordsList = wordsText
+    .split(",")
+    .filter((w) => w.length <= board.length * board[0].length); // hardcode 16?
+  console.log(wordsList);
+  return wordsList;
 }
 
 // Given a filename, return the text in that file.

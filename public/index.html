@@ -5,11 +5,56 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Boggle</title>
 </head>
-<script src="script.js"></script>
 
 <body>
+  <!--Two columns, side by side.-->
+  <main id="boxes">
+    <div id="col1">
+      <!--Boggle Table, 4x4-->
+      <table id="boggleTable">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tr>
+      </table>
+      <!-- <button id="getWords" style="margin-top: 10px;">Get Words!</button> -->
+    </div>
+    <!--Word List-->
+    <div id="col2">
+      <div id="outerWordListDiv">
+        <button style="margin:4%;padding:auto">Press me!</button>
+        <div id="innerWordListDiv">
+          <ul id="wordsList"></ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 
 </html>

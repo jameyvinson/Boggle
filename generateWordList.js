@@ -11,11 +11,13 @@
  */
 
 const fs = require("fs");
-const words = require("wordlist-english");
+const words = require("an-array-of-english-words");
 
 function main() {
   // first, delete any data in an existing file named "words.txt"
-  var englishWords = words["english"];
+  // var englishWords = words["english"];
+
+  var englishWords = words;
 
   if (fs.existsSync("words.txt")) {
     fs.truncate("words.txt", 0, (err) => {

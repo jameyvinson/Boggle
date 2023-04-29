@@ -26,12 +26,12 @@ To generate new a new board, navigate to the main directory for the repository. 
 ```
 node generateBoard.js <number-of-rows> <number-of-columns>
 ```
-where `<number-of-rows>` and `<number-of-columns>` are two integers specifying the dimensions of the board. The new board will be printed to `board.txt`.
+where `<number-of-rows>` and `<number-of-columns>` are two integers specifying the dimensions of the board. The new board will be printed to `public/board.txt`.
 <br><br>
 To generate a `words.txt` file, type 
 ```
 node generateWordList.js
 ``` 
-from the main directory. The words list will be printed to `words.txt`. The list of the words used is from `an-array-of-english-words` (more info here: https://github.com/words/an-array-of-english-words).
+from the main directory. The words list will be printed to `public/words.txt`. The list of the words used is from `an-array-of-english-words` (more info here: https://github.com/words/an-array-of-english-words).
 
 

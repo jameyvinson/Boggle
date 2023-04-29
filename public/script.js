@@ -1,3 +1,5 @@
+let foundWords = [];
+
 window.onload = async () => {
   let dictionary = [];
   let board = [];
@@ -5,7 +7,14 @@ window.onload = async () => {
 
   board = await getBoard(); // load right away
   dictionary = await getDictionary(board);
-  foundWords = findStartingLetter(board, dictionary);
+  foundWords = getAllWords(board, dictionary);
+
+  let button = document.getElementById("getWordsBtn");
+  button.addEventListener("click", function () {
+    console.log(foundWords);
+    button.disabled = true;
+    renderList(foundWords);
+  });
 
   console.log(foundWords);
 };
@@ -113,7 +122,10 @@ async function readTextFile(fileName) {
   return data; // string
 }
 
-function findStartingLetter(board, dictionaryList) {
+// Given a 2D matrix of characters and a list of valid words, get all the words
+// in the matrix, per the rules of Boggle.
+// Return: Array of found words.
+function getAllWords(board, dictionaryList) {
   let foundWords = [];
 
   // cycle through all the letters on the board, element by element
@@ -125,7 +137,7 @@ function findStartingLetter(board, dictionaryList) {
       let usedSpaces = [];
 
       // find all the words that begin with this [i,j]th element
-      findWords(board, i, j, "", usedSpaces, dictionaryList, foundWords);
+      getWords(board, i, j, "", usedSpaces, dictionaryList, foundWords);
     }
   }
 
@@ -136,7 +148,7 @@ function findStartingLetter(board, dictionaryList) {
 // Given a 2D board, the index of the current character (i and j), the current
 // string (currStr), all positions used in this string, a list of valid words,
 // and a list of found words, find all words beginning with the prefix currStr.
-function findWords(
+function getWords(
   board,
   i,
   j,
@@ -179,18 +191,18 @@ function findWords(
 
   // now, recursively go every direction from this [i,j]th position, to test
   // all possible strings
-  findWords(board, i + 1, j, currStr, usedSpaces, validWords, foundWords); // down
-  findWords(board, i, j + 1, currStr, usedSpaces, validWords, foundWords); // right
-  findWords(board, i - 1, j, currStr, usedSpaces, validWords, foundWords); // up
-  findWords(board, i, j - 1, currStr, usedSpaces, validWords, foundWords); // left
-  findWords(board, i - 1, j - 1, currStr, usedSpaces, validWords, foundWords); // up, left
-  findWords(board, i + 1, j + 1, currStr, usedSpaces, validWords, foundWords); // down, right
-  findWords(board, i - 1, j + 1, currStr, usedSpaces, validWords, foundWords); // up, right
-  findWords(board, i + 1, j - 1, currStr, usedSpaces, validWords, foundWords); // down, left
+  getWords(board, i + 1, j, currStr, usedSpaces, validWords, foundWords); // down
+  getWords(board, i, j + 1, currStr, usedSpaces, validWords, foundWords); // right
+  getWords(board, i - 1, j, currStr, usedSpaces, validWords, foundWords); // up
+  getWords(board, i, j - 1, currStr, usedSpaces, validWords, foundWords); // left
+  getWords(board, i - 1, j - 1, currStr, usedSpaces, validWords, foundWords); // up, left
+  getWords(board, i + 1, j + 1, currStr, usedSpaces, validWords, foundWords); // down, right
+  getWords(board, i - 1, j + 1, currStr, usedSpaces, validWords, foundWords); // up, right
+  getWords(board, i + 1, j - 1, currStr, usedSpaces, validWords, foundWords); // down, left
 }
 
-// Given a list of valid words (dictionary) and a string, check to see if the string
-// is the prefix of any valid words.
+// Given a list of valid words (dictionary) and a string, check to see if the
+// string is the prefix of any valid words.
 // Return: true if valid, false otherwise.
 function isValidPrefix(dictionary, currStr) {
   let isValidPrefix = false; // default value is false
@@ -205,10 +217,9 @@ function isValidPrefix(dictionary, currStr) {
   return isValidPrefix;
 }
 
-// Given a 2D matrix, render the values onto the table in the document.
+// Given a 2D matrix, render the values onto the table in the Web UI.
 function renderBoard(board) {
   // creates a <table> element and a <tbody> element
-  let tableDiv = document.getElementById("col1");
   let table = document.getElementById("boggleTable");
   let trs = table.getElementsByTagName("tr");
   let tds = null;
@@ -220,4 +231,16 @@ function renderBoard(board) {
       tds[j].innerText = cellStr;
     }
   }
+}
+
+// Given a list of data, render the values into a list in the Web UI.
+function renderList(data) {
+  const list = document.getElementById("wordsList");
+  console.log(data);
+
+  data.forEach((item) => {
+    let li = document.createElement("li");
+    li.innerText = item;
+    list.appendChild(li);
+  });
 }

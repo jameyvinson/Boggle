@@ -2,7 +2,11 @@
 This program solves for all valid words in a Boggle board.
 
 ## Web UI
-To run this program in a web browser, clone repository and navigate to the main directory. (Note: this project runs in Node.js, so Node.js will need to be installed. Get installation information here: https://nodejs.org/en.) Once there, type 
+To run this program in a web browser, clone repository and navigate to the main directory. (Note: this project runs in Node.js, so Node.js will need to be installed. Get installation information here: https://nodejs.org/en.) Once there, install all `npm` packages needed for the program by typing
+```
+npm install
+```
+Once all dependencies are installed, type
 ```
 node app.js
 ```

@@ -18,18 +18,21 @@ function main() {
   // var englishWords = words["english"];
 
   var englishWords = words;
+  let path = ".\\public\\words.txt";
 
-  if (fs.existsSync("words.txt")) {
-    fs.truncate("words.txt", 0, (err) => {
+  if (fs.existsSync(path)) {
+    fs.truncate(path, 0, (err) => {
       if (err) throw err;
     });
   }
 
   // write the words to file words.txt string by string, separated by spaces
 
-  fs.appendFile("words.txt", englishWords.toString(), (err) => {
+  fs.appendFile(path, englishWords.toString(), (err) => {
     if (err) throw err;
   });
+
+  console.log(`Word list created and printed to .\\public\\words.txt file.`);
 }
 
 main();

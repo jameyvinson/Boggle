@@ -37,9 +37,10 @@ function generateBoard(m, n) {
 // file will have each line separated by a new line, with elements separated
 // by spaces
 function createFile(board) {
+  let path = ".\\public\\board.txt";
   // first, delete any data in an existing file named "board.txt"
-  if (fs.existsSync("board.txt")) {
-    fs.truncate("board.txt", 0, (err) => {
+  if (fs.existsSync(path)) {
+    fs.truncate(path, 0, (err) => {
       if (err) throw err;
     });
   }
@@ -47,7 +48,7 @@ function createFile(board) {
   // write the board to file board.txt line by line, separated by spaces
   for (let i = 0; i < board.length; i++) {
     str = board[i].toString() + "\n";
-    fs.appendFile("board.txt", str, (err) => {
+    fs.appendFile(path, str, (err) => {
       if (err) throw err;
     });
   }
@@ -87,7 +88,9 @@ function main() {
   // print to "board.txt" file
   createFile(board);
 
-  console.log(`${m} x ${n} board created and printed to board.txt file.`);
+  console.log(
+    `${m} x ${n} board created and printed to .\\public\\board.txt file.`
+  );
 }
 
 main();

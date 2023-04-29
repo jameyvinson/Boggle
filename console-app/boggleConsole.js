@@ -46,6 +46,10 @@ function getBoard() {
 
     // Add each letter in the row to the board matrix.
     line.split(",").forEach((letter) => {
+      // Remove a line break, if present.
+      if (letter.endsWith("\r")) {
+        letter = letter.replace("\r", "");
+      }
       board[row][column] = letter.toLowerCase();
       column++;
     });
@@ -63,69 +67,71 @@ function getBoard() {
 // Return: Array of strings.
 function getDictionary(m, n) {
   let fileName = process.argv[3]; // get filename from CLAs
+  let wordsList = [];
 
   try {
     // Remove all words that are longer than m*n  (longest word possible on mxn grid).
-    let wordsList = fs
+    wordsList = fs
       .readFileSync(fileName, "utf-8")
       .split(",")
       .filter((w) => w.length <= m * n);
-
-    // Remove all words that contain letters that are not in the board.
-    let boardLetters = [];
-    for (let i = 0; i < board.length; i++) {
-      boardLetters = boardLettersArr.concat(board[i]);
-    }
-    let allAlphabetLetters = [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e",
-      "f",
-      "g",
-      "h",
-      "i",
-      "j",
-      "k",
-      "l",
-      "m",
-      "n",
-      "o",
-      "p",
-      "q",
-      "r",
-      "s",
-      "t",
-      "u",
-      "v",
-      "w",
-      "x",
-      "y",
-      "z",
-    ];
-
-    // Take the difference between all alphabet letters and all the letters on the board.
-    let unusedLetters = [...allAlphabetLetters].filter(
-      (x) => !boardLettersArr.includes(x)
-    );
-
-    // Go through the unused letters, removing all words from the dictionary that
-    // contain the unused letters. Those words are not possible to make with the
-    // given board.
-    let possibleWords = [];
-    for (let i = 0; i < unusedLetters.length; i++) {
-      possibleWords = wordsList.filter((w) => !w.includes(unusedLetters[i]));
-      wordsList = possibleWords;
-    }
-
-    return possibleWords;
   } catch (err) {
     console.log(
       `Error reading from file "${fileName}". Try a different file name?`
     );
     return null;
   }
+
+  // Remove all words that contain letters that are not in the board.
+  let boardLetters = [];
+  for (let i = 0; i < board.length; i++) {
+    boardLetters = boardLetters.concat(board[i]);
+  }
+
+  let allAlphabetLetters = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+  ];
+
+  // Take the difference between all alphabet letters and all the letters on the board.
+  let unusedLetters = [...allAlphabetLetters].filter(
+    (x) => !boardLetters.includes(x)
+  );
+
+  // Go through the unused letters, removing all words from the dictionary that
+  // contain the unused letters. Those words are not possible to make with the
+  // given board.
+  let possibleWords = [];
+  for (let i = 0; i < unusedLetters.length; i++) {
+    possibleWords = wordsList.filter((w) => !w.includes(unusedLetters[i]));
+    wordsList = possibleWords;
+  }
+
+  return possibleWords;
 }
 
 // Given a 2D matrix of characters and a list of valid words, get all the words

@@ -14,6 +14,14 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+h1 {
+  font-size: 350%;
+  background-color: royalblue;
+  text-align: center;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 /* Div Columns */
 div {
   float: left;
@@ -23,10 +31,12 @@ div {
 #col1 {
   max-width: 70%;
   text-align: center;
+  margin-bottom: 20px;
 }
 #col2 {
   margin-left: 2%;
-  max-width: 30%;
+  max-width: 28%;
+  margin-bottom: 20px;
 }
 
 /* Table */
@@ -54,7 +64,7 @@ td {
 
 /* Button */
 button {
-  margin-top: 2%;
+  margin-top: 4%;
   margin-left: 2%;
   margin-right: 2%;
   padding: auto;

@@ -25,6 +25,7 @@ div {
   text-align: center;
 }
 #col2 {
+  margin-left: 2%;
   max-width: 30%;
 }
 
@@ -47,13 +48,15 @@ td {
   font-weight: bolder;
   font-size: 300%;
   background-color: white;
-  width: 120px;
+  min-width: 100px;
   height: 100px;
 }
 
 /* Button */
 button {
-  margin: 4%;
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
   padding: auto;
 }
 

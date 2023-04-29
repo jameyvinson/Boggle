@@ -1,4 +1,4 @@
-# Boggle
+# Boggle Solver
 This program solves for all valid words in a Boggle board.
 
 ## Web UI

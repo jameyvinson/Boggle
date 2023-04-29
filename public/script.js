@@ -1,23 +1,42 @@
-let foundWords = [];
+let foundWords;
+let board;
+let dictionary;
 
 window.onload = async () => {
-  let dictionary = [];
-  let board = [];
-  let foundWords = [];
+  // Render the board from "board.txt" on the web UI.
+  board = await getBoard(); // load board from "board.txt"
+  renderBoard(board);
 
-  board = await getBoard(); // load right away
   dictionary = await getDictionary(board);
   foundWords = getAllWords(board, dictionary);
-
-  let button = document.getElementById("getWordsBtn");
-  button.addEventListener("click", function () {
-    console.log(foundWords);
-    button.disabled = true;
-    renderList(foundWords);
-  });
-
-  console.log(foundWords);
 };
+
+// Render list of all words on the screen.
+let getWordsBtn = document.getElementById("getWordsBtn");
+getWordsBtn.addEventListener("click", function () {
+  console.log(foundWords);
+  getWordsBtn.disabled = true; // no more clicking
+  renderList(foundWords);
+});
+
+// Get and render a new board.
+let getNewBoardBtn = document.getElementById("getNewBoardBtn");
+getNewBoardBtn.addEventListener("click", async function () {
+  let newBoard = getNewBoard();
+
+  // let newBoard = board;
+  renderBoard(newBoard);
+
+  document.getElementById("wordsList").innerHTML = ""; // clear the found words list
+
+  getWordsBtn.disabled = false;
+
+  // Because the board contains new letters, get a new dictionary.
+  dictionary = await getDictionary(newBoard);
+
+  // Update the found words with the new board's words.
+  foundWords = getAllWords(newBoard, dictionary);
+});
 
 // Read text from given filename and parse the text to create a 2D matrix
 // with the given inputs. Render the matrix on web page.
@@ -47,8 +66,7 @@ async function getBoard() {
     row++;
   });
 
-  // Render the given board on the web UI.
-  renderBoard(board);
+  console.log(board);
   return board;
 }
 
@@ -127,6 +145,7 @@ async function readTextFile(fileName) {
 // Return: Array of found words.
 function getAllWords(board, dictionaryList) {
   let foundWords = [];
+  console.log(board);
 
   // cycle through all the letters on the board, element by element
   for (let i = 0; i < board.length; i++) {
@@ -141,7 +160,6 @@ function getAllWords(board, dictionaryList) {
     }
   }
 
-  // console.log(foundWords);
   return foundWords;
 }
 
@@ -217,6 +235,27 @@ function isValidPrefix(dictionary, currStr) {
   return isValidPrefix;
 }
 
+// Generates a new 4x4 board of random letters.
+// Return: 4x4 matrix of letters.
+function getNewBoard() {
+  // alphabet of uppercase letters
+  var alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+  // board will be
+  var board = [];
+  for (var i = 0; i < 4; i++) {
+    board[i] = [];
+    for (var j = 0; j < 4; j++) {
+      board[i][j] = alphabet.charAt(
+        Math.floor(Math.random() * alphabet.length)
+      );
+    }
+  }
+
+  console.log(board);
+  return board;
+}
+
 // Given a 2D matrix, render the values onto the table in the Web UI.
 function renderBoard(board) {
   // creates a <table> element and a <tbody> element
@@ -236,11 +275,17 @@ function renderBoard(board) {
 // Given a list of data, render the values into a list in the Web UI.
 function renderList(data) {
   const list = document.getElementById("wordsList");
-  console.log(data);
 
+  list.innerHTML = "";
   data.forEach((item) => {
     let li = document.createElement("li");
     li.innerText = item;
     list.appendChild(li);
   });
+
+  if (data.length === 0) {
+    let li = document.createElement("li");
+    li.innerText = "This board contains no words!";
+    list.appendChild(li);
+  }
 }

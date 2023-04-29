@@ -11,7 +11,7 @@
 
 <body>
   <!--Two columns, side by side.-->
-  <main id="boxes">
+  <div>
     <div id="col1">
       <!--Boggle Table, 4x4-->
       <table id="boggleTable">
@@ -46,13 +46,14 @@
     <!--Word List-->
     <div id="col2">
       <div id="outerWordListDiv">
-        <button style="margin:4%;padding:auto">Press me!</button>
+        <button id="getWordsBtn">Get all words!</button>
         <div id="innerWordListDiv">
           <ul id="wordsList"></ul>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+
 
   <script src="script.js"></script>
 </body>

@@ -11,34 +11,24 @@ html {
 body {
   display: table-cell;
   vertical-align: middle;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-#boxes {
-  content: "";
-  display: table;
-  clear: both;
-  width: 100%;
-}
-
+/* Div Columns */
 div {
   float: left;
+  display: flex;
 }
 
 #col1 {
-  width: 70%;
+  max-width: 70%;
   text-align: center;
 }
 #col2 {
-  width: 30%;
+  max-width: 30%;
 }
 
-table,
-td {
-  /* table-layout: fixed; */
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
+/* Table */
 tr {
   height: 40px;
 }
@@ -47,10 +37,13 @@ table {
   background-color: royalblue;
   width: 90%;
   padding: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 td {
-  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid black;
+  border-radius: 5px;
   font-weight: bolder;
   font-size: 300%;
   background-color: white;
@@ -58,15 +51,21 @@ td {
   height: 100px;
 }
 
+/* Button */
+button {
+  margin: 4%;
+  padding: auto;
+}
+
+/* List of Words */
 #wordsList {
   list-style-type: none;
 }
 #outerWordListDiv {
   border: 1px solid grey;
   border-radius: 5px;
-  /* margin: 10px; */
-  width: 202px;
-  height: 420px;
+  width: 200px;
+  height: 465px;
   display: flex;
   flex-direction: column;
 }
@@ -74,4 +73,7 @@ td {
 #innerWordListDiv {
   flex: 1;
   overflow: scroll;
+  overflow-x: hidden;
+  margin-bottom: 4%;
+  font-family: Arial, Helvetica, sans-serif;
 }

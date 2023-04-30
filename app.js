@@ -1,5 +1,14 @@
 /* app.js
-*/
+ *
+ * Set up a locally hosted website that renders the index.html page.
+ * 
+ * to run: node .\app.js
+ *
+ * Jamey Vinson
+ * April 28, 2023
+ *
+ */
+
 const express = require("express");
 const app = express();
 const port = 5000;

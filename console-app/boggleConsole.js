@@ -216,7 +216,7 @@ function getWords(
 
   // If the current string is a word (and not already added), add it to the
   // array of found words.
-  if (validWords.includes(currStr) && !foundWords.includes(currStr)) {
+  if (validWords.includes(currStr) && !foundWords.includes(currStr) && currStr.length >= 3) {
     foundWords.push(currStr);
   }
 

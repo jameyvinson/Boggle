@@ -24,7 +24,6 @@ let getNewBoardBtn = document.getElementById("getNewBoardBtn");
 getNewBoardBtn.addEventListener("click", async function () {
   let newBoard = getNewBoard();
 
-  // let newBoard = board;
   renderBoard(newBoard);
 
   document.getElementById("wordsList").innerHTML = ""; // clear the found words list
@@ -59,6 +58,10 @@ async function getBoard() {
 
     // Add each letter in the row to the board matrix.
     line.split(",").forEach((letter) => {
+      // Remove a line break, if present.
+      if (letter.endsWith("\r")) {
+        letter = letter.replace("\r", "");
+      }
       board[row][column] = letter.toLowerCase();
       column++;
     });
@@ -147,15 +150,17 @@ function getAllWords(board, dictionaryList) {
   let foundWords = [];
   console.log(board);
 
-  // cycle through all the letters on the board, element by element
+  // Cycle through all the letters on the board, element by element, to find the
+  // starting letters for all possible strings. Pass starting letter to getWords
+  // to recursively solve for all words beginning with that letter.
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
-      // to ensure we don't go back to a space we've used before, keep a list of
-      // the locations in the matrix that are in our current word, where each
-      // location is represented by a number: i*board.length + j
+      // Keep list of the locations in the matrix that are in our current word,
+      // so positions aren't repeating in a word. Each location is represented
+      // by a number: i*board.length + j.
       let usedSpaces = [];
 
-      // find all the words that begin with this [i,j]th element
+      // Find all the words that begin with this [i,j]th element.
       getWords(board, i, j, "", usedSpaces, dictionaryList, foundWords);
     }
   }
@@ -175,40 +180,41 @@ function getWords(
   validWords,
   foundWords
 ) {
-  // the number associated with the current [i,j]th space
+  // Number associated with the current [i,j]th space.
   let currIndexNum = i * board.length + j;
 
-  // check for invalidity (out of bounds indeces, invalid dirty bit)
+  // Check for any invalidity (out of bounds indeces or space already used in word).
   if (
     i === board.length ||
     j === board[0].length ||
     j < 0 ||
     i < 0 ||
-    usedSpacesOriginal.includes(currIndexNum)
+    usedSpacesOriginal.includes(currIndexNum) // already added this letter
   ) {
     return; // no need to return the found words list, it's passed by reference
   }
 
-  // "slice" the array so that it doesn't pass by reference
+  // "Slice" (copy) the array so that it doesn't pass by reference.
   var usedSpaces = usedSpacesOriginal.slice();
 
-  // we've "used" this space; push it to our usedSpaces list
+  // This space has been used; push it to our usedSpaces list.
   usedSpaces.push(currIndexNum);
   currStr += board[i][j]; // add current letter to our string
 
-  // check to see if this new string is even a valid prefix
+  // Check to see if this new string is even a valid prefix.
   let isInvalidPrefix = !isValidPrefix(validWords, currStr);
   if (isInvalidPrefix) {
     return; // no need to follow this path!
   }
 
-  // if currStr is a word (and not already added), add it to the foundWords array
-  if (validWords.includes(currStr) && !foundWords.includes(currStr)) {
+  // If the current string is a word (and not already added), add it to the
+  // array of found words.
+  if (validWords.includes(currStr) && !foundWords.includes(currStr) && currStr.length >= 3) {
     foundWords.push(currStr);
   }
 
-  // now, recursively go every direction from this [i,j]th position, to test
-  // all possible strings
+  // Now, recursively go every direction from this [i,j]th position, to test
+  // all possible strings/paths.
   getWords(board, i + 1, j, currStr, usedSpaces, validWords, foundWords); // down
   getWords(board, i, j + 1, currStr, usedSpaces, validWords, foundWords); // right
   getWords(board, i - 1, j, currStr, usedSpaces, validWords, foundWords); // up
@@ -238,13 +244,12 @@ function isValidPrefix(dictionary, currStr) {
 // Generates a new 4x4 board of random letters.
 // Return: 4x4 matrix of letters.
 function getNewBoard() {
-  // alphabet of uppercase letters
-  var alphabet = "abcdefghijklmnopqrstuvwxyz";
+  var alphabet = "abcdefghijklmnopqrstuvwxyz"; // lower case, like dictionary words
 
-  // board will be
+  // Populate the 4x4 board with random letters.
   var board = [];
   for (var i = 0; i < 4; i++) {
-    board[i] = [];
+    board[i] = []; // each row is an array
     for (var j = 0; j < 4; j++) {
       board[i][j] = alphabet.charAt(
         Math.floor(Math.random() * alphabet.length)
@@ -258,13 +263,13 @@ function getNewBoard() {
 
 // Given a 2D matrix, render the values onto the table in the Web UI.
 function renderBoard(board) {
-  // creates a <table> element and a <tbody> element
   let table = document.getElementById("boggleTable");
-  let trs = table.getElementsByTagName("tr");
+  let trs = table.getElementsByTagName("tr"); // rows
   let tds = null;
 
+  // Populate each table cell with its corresponding board element.
   for (let i = 0; i < trs.length; i++) {
-    tds = trs[i].getElementsByTagName("td");
+    tds = trs[i].getElementsByTagName("td"); // returns array of tds
     for (let j = 0; j < tds.length; j++) {
       let cellStr = board[i][j].toUpperCase();
       tds[j].innerText = cellStr;
@@ -276,13 +281,17 @@ function renderBoard(board) {
 function renderList(data) {
   const list = document.getElementById("wordsList");
 
+  // Reset the list to be blank.
   list.innerHTML = "";
+
+  // Create a list element for each word, and add it to the list.
   data.forEach((item) => {
     let li = document.createElement("li");
     li.innerText = item;
     list.appendChild(li);
   });
 
+  // In the off chance that there are no words, display this message.
   if (data.length === 0) {
     let li = document.createElement("li");
     li.innerText = "This board contains no words!";

@@ -1,6 +1,7 @@
 let foundWords;
 let board;
 let dictionary;
+let guessedWords;
 
 window.onload = async () => {
   // Render the board from "board.txt" on the web UI.
@@ -9,7 +10,23 @@ window.onload = async () => {
 
   dictionary = await getDictionary(board);
   foundWords = getAllWords(board, dictionary);
+  guessedWords = [];
 };
+
+let guessBtn = document.getElementById("guessBtn");
+guessBtn.addEventListener("click", function () {
+  let guess = document.getElementById("guessBox").value;
+  document.getElementById("guessBox").value = "";
+  console.log(guess);
+
+  if (foundWords.includes(guess)) {
+    console.log("You've found a word!");
+    guessedWords.push(guess);
+    console.log(`All guesses: ${guessedWords}`);
+  } else {
+    console.log(`${guess} is not a valid word`);
+  }
+});
 
 // Render list of all words on the screen.
 let getWordsBtn = document.getElementById("getWordsBtn");
@@ -35,6 +52,8 @@ getNewBoardBtn.addEventListener("click", async function () {
 
   // Update the found words with the new board's words.
   foundWords = getAllWords(newBoard, dictionary);
+
+  guessedWords = [];
 });
 
 // Read text from given filename and parse the text to create a 2D matrix
@@ -209,7 +228,11 @@ function getWords(
 
   // If the current string is a word (and not already added), add it to the
   // array of found words.
-  if (validWords.includes(currStr) && !foundWords.includes(currStr) && currStr.length >= 3) {
+  if (
+    validWords.includes(currStr) &&
+    !foundWords.includes(currStr) &&
+    currStr.length >= 3
+  ) {
     foundWords.push(currStr);
   }
 

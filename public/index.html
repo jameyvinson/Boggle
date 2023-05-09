@@ -21,17 +21,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
         </tr>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -42,10 +33,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
         </tr>
         <tr>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -57,13 +46,26 @@
     <!--Word List-->
     <div id="col2">
       <div id="outerWordListDiv">
-        <button id="getWordsBtn">Get all words!</button>
-        <button id="getNewBoardBtn" style="margin-bottom:4%">New board</button>
         <div id="innerWordListDiv">
           <ul id="wordsList"></ul>
         </div>
+        <div id="innerDiv">
+          <button id="getWordsBtn">Get all words!</button>
+
+
+        </div>
+        <div id="newBoard">
+          <h3 style="margin:-1%">New Game</h3>
+          <p style="margin-top: 2%; margin-bottom: 2%;">Board Size:</p>
+          <input type="radio" id="fourByFour" name="boardSize" checked>
+          <label for="fourByFour">4x4</label><br>
+          <input type="radio" id="fiveByFive" name="boardSize">
+          <label for="fiveByFive">5x5</label><br>
+          <button id="getNewBoard">Get new board</button>
+        </div>
       </div>
     </div>
+
   </div>
 
 

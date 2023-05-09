@@ -21,11 +21,26 @@ getWordsBtn.addEventListener("click", function () {
   renderList(foundWords);
 });
 
-// Get and render a new board.
-let getNewBoardBtn = document.getElementById("getNewBoardBtn");
-getNewBoardBtn.addEventListener("click", async function () {
-  let newBoard = getNewBoard();
+// Get and render a new board with dimensions.
+let newBoardBtn = document.getElementById("getNewBoard");
+newBoardBtn.addEventListener("click", async function () {
+  // Get the desired dimensions for the board, from the radio buttons.
+  let fourByFour = document.getElementById("fourByFour");
+  if (fourByFour.checked) {
+    // Four by four.
+    console.log("4x4");
+    n = 4;
+    m = 4;
+  } else {
+    // Five by five.
+    console.log("5x5");
+    n = 5;
+    m = 5;
+  }
 
+  let newBoard = getNewBoard(n, m); // new random board
+
+  // Render the new board.
   renderBoard(newBoard);
 
   document.getElementById("wordsList").innerHTML = ""; // clear the found words list
@@ -248,25 +263,8 @@ function isValidPrefix(dictionary, currStr) {
 
 // Generates a new 4x4 board of random letters.
 // Return: 4x4 matrix of letters.
-function getNewBoard() {
+function getNewBoard(n, m) {
   var alphabet = "abcdefghijklmnopqrstuvwxyz"; // lower case, like dictionary words
-
-  // n = number of rows, m = number of columns
-  let n = Math.floor(Math.random() * 2);
-  let m = Math.floor(Math.random() * 2);
-
-  // 0: 4, 1:5
-  if (n === 0) {
-    n = 4;
-  } else {
-    n = 5;
-  }
-
-  if (m === 0) {
-    m = 4;
-  } else {
-    m = 5;
-  }
 
   // Populate the 4x4 board with random letters.
   board = [];
@@ -311,6 +309,15 @@ function resizeBoard(board) {
   let tableRows = trs.length;
   let tableColumns = trs[0].getElementsByTagName("td").length;
 
+  if (columns === 4) {
+    for (let i = 0; i < trs.length; i++) {
+      trs[i].style.fontSize = "150%";
+    }
+  } else {
+    for (let i = 0; i < trs.length; i++) {
+      trs[i].style.fontSize = "140%";
+    }
+  }
   // Resize the DOM columns.
   if (columns > tableColumns) {
     // More columns in the matrix; add a column
@@ -334,6 +341,7 @@ function resizeBoard(board) {
 function addRow(table, columns) {
   // Add a row.
   let row = table.insertRow();
+  row.style.fontSize = "140%";
   // Populate the row cells
   for (let i = 0; i < columns; i++) {
     row.insertCell();

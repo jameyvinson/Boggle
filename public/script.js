@@ -7,8 +7,8 @@ let allPaths;
 window.onload = async () => {
   // Render the board from "board.txt" on the web UI.
 
-  board = await getBoard(); // load board from "board.txt"
-  // let board = getNewBoard(4, 4); // new random board
+  // board = await getBoard(); // load board from "board.txt"
+  let board = getNewBoard(4, 4); // new random board
   renderBoard(board);
 
   dictionary = await getDictionary(board);

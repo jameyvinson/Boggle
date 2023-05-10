@@ -83,6 +83,7 @@ button {
 /* List of Words */
 #wordsList {
   list-style-type: none;
+  color: green;
 }
 
 #outerWordListDiv {

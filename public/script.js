@@ -8,6 +8,7 @@ window.onload = async () => {
   // Render the board from "board.txt" on the web UI.
 
   board = await getBoard(); // load board from "board.txt"
+  // let board = getNewBoard(4, 4); // new random board
   renderBoard(board);
 
   dictionary = await getDictionary(board);
@@ -34,16 +35,19 @@ guessBtn.addEventListener("click", function () {
   let guess = document.getElementById("guessBox").value;
   document.getElementById("guessBox").value = "";
 
+  // Only take the first word (no spaces or trailing words).
+  var firstWord = guess.replace(/ .*/, "");
+
   // Check if the guess is a valid word in the board.
-  if (foundWords.includes(guess) && !guessedWords.includes(guess)) {
+  if (foundWords.includes(firstWord) && !guessedWords.includes(firstWord)) {
     console.log("You've found a word!");
-    guessedWords.push(guess);
+    guessedWords.push(firstWord);
 
     // Add the guessed words to the rendered list.
-    addToList(guess);
+    addToList(firstWord);
     console.log(`All guesses: ${guessedWords}`);
   } else {
-    console.log(`${guess} is not a valid word`);
+    console.log(`${firstWord} is not a valid word`);
   }
 });
 
@@ -53,8 +57,13 @@ getWordsBtn.addEventListener("click", function () {
   console.log("Valid words: " + foundWords);
   console.log("Guessed words: " + guessedWords);
 
+  let intersection = foundWords.filter((x) => guessedWords.includes(x));
+  let difference = foundWords.filter((x) => !guessedWords.includes(x));
+  console.log(intersection);
+  console.log(difference);
+
   getWordsBtn.disabled = true; // no more clicking
-  renderList(foundWords);
+  renderList(intersection, difference);
 });
 
 // Get and render a new board with dimensions.
@@ -418,32 +427,23 @@ function deleteColumn(trs, tableRows) {
 
 // Add an element (data) to the list and render it on the DOM.
 function addToList(data) {
-  const list = document.getElementById("wordsList"); // use a different element?
+  let list = document.getElementById("wordsList"); // use a different element?
   let li = document.createElement("li");
   li.innerText = data;
   list.appendChild(li);
 }
 
 // Given a list of data, render the values into a list in the Web UI.
-function renderList(data) {
-  const list = document.getElementById("wordsList");
-
-  // Reset the list to be blank.
-  list.innerHTML = "";
+function renderList(intersection, difference) {
+  let list = document.getElementById("wordsList");
 
   // Create a list element for each word, and add it to the list.
-  data.forEach((item) => {
+  difference.forEach((item) => {
     let li = document.createElement("li");
     li.innerText = item;
+    li.style.color = "black";
     list.appendChild(li);
   });
-
-  // In the off chance that there are no words, display this message.
-  if (data.length === 0) {
-    let li = document.createElement("li");
-    li.innerText = "This board contains no words!";
-    list.appendChild(li);
-  }
 
   guessBtn.disabled = true;
   guessBox.disabled = true;

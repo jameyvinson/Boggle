@@ -309,15 +309,17 @@ function resizeBoard(board) {
   let tableRows = trs.length;
   let tableColumns = trs[0].getElementsByTagName("td").length;
 
+  // Change the size of the font, depending on the board size.
   if (columns === 4) {
     for (let i = 0; i < trs.length; i++) {
-      trs[i].style.fontSize = "150%";
+      trs[i].style.fontSize = "150%"; // bigger for 4x4
     }
   } else {
     for (let i = 0; i < trs.length; i++) {
-      trs[i].style.fontSize = "140%";
+      trs[i].style.fontSize = "140%"; // smaller for 5x5
     }
   }
+  
   // Resize the DOM columns.
   if (columns > tableColumns) {
     // More columns in the matrix; add a column

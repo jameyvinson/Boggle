@@ -38,7 +38,7 @@ div {
   margin-bottom: 20px;
 }
 
-#newBoard {
+.innerDiv {
   display: block;
   margin: 2%;
   border: 1px solid grey;
@@ -74,7 +74,7 @@ td {
 button {
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 4%;
-  margin-left: 2%;
+  margin-left: 0%;
   margin-right: 2%;
   padding: auto;
   size: 26pt;
@@ -84,6 +84,7 @@ button {
 #wordsList {
   list-style-type: none;
 }
+
 #outerWordListDiv {
   border: 1px solid grey;
   border-radius: 5px;
@@ -97,6 +98,9 @@ button {
   flex: 1;
   overflow: scroll;
   overflow-x: hidden;
+  margin-top: 2%;
   margin-bottom: 4%;
   font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  height: 60%;
 }

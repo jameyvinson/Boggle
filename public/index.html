@@ -46,19 +46,24 @@
     <!--Word List-->
     <div id="col2">
       <div id="outerWordListDiv">
-        
-        <input type="text" id="guessBox">
-        <button id="guessBtn">Submit guess</button>
+        <div class="innerDiv" style="height:75%; position: relative;">
+          <h3 style="margin:1%">Guess Words</h3>
+          <input type="text" id="guessBox" style="width:95%">
+          <button id="guessBtn">Submit guess</button>
 
-        <div id="innerWordListDiv">
-          <ul id="wordsList"></ul>
+          <div id="innerWordListDiv">
+            <ul id="wordsList"></ul>
+          </div>
+
+          <div style="position: absolute; bottom:2%">
+            <button id="getWordsBtn">Give up? Get all
+              words!</button>
+          </div>
+
+
+
         </div>
-        <div id="innerDiv">
-          <button id="getWordsBtn">Get all words!</button>
-
-
-        </div>
-        <div id="newBoard">
+        <div class="innerDiv" style="height:25%">
           <h3 style="margin:-1%">New Game</h3>
           <p style="margin-top: 2%; margin-bottom: 2%;">Board Size:</p>
           <input type="radio" id="fourByFour" name="boardSize" checked>

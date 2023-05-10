@@ -15,15 +15,32 @@ window.onload = async () => {
   guessedWords = [];
 };
 
+// "Click" the guess button when the user presses the "Enter" key
+let guessBox = document.getElementById("guessBox");
+guessBox.addEventListener("keypress", function (event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the guess button
+    document.getElementById("guessBtn").click();
+  }
+});
+
+// Handle the user pressing the guess word button
 let guessBtn = document.getElementById("guessBtn");
 guessBtn.addEventListener("click", function () {
+  // Take the value in the text box, and blank the text box.
   let guess = document.getElementById("guessBox").value;
   document.getElementById("guessBox").value = "";
-  console.log(guess);
 
-  if (foundWords.includes(guess)) {
+  // Check if the guess is a valid word in the board.
+  if (foundWords.includes(guess) && !guessedWords.includes(guess)) {
     console.log("You've found a word!");
     guessedWords.push(guess);
+
+    // Add the guessed words to the rendered list.
+    addToList(guess);
     console.log(`All guesses: ${guessedWords}`);
   } else {
     console.log(`${guess} is not a valid word`);
@@ -33,7 +50,9 @@ guessBtn.addEventListener("click", function () {
 // Render list of all words on the screen.
 let getWordsBtn = document.getElementById("getWordsBtn");
 getWordsBtn.addEventListener("click", function () {
-  console.log(foundWords);
+  console.log("Valid words: " + foundWords);
+  console.log("Guessed words: " + guessedWords);
+
   getWordsBtn.disabled = true; // no more clicking
   renderList(foundWords);
 });
@@ -41,6 +60,11 @@ getWordsBtn.addEventListener("click", function () {
 // Get and render a new board with dimensions.
 let newBoardBtn = document.getElementById("getNewBoard");
 newBoardBtn.addEventListener("click", async function () {
+  // Boiler plate, resetting buttons and lists.
+  guessBox.disabled = false;
+  guessBtn.disabled = false;
+  guessedWords = [];
+
   // Get the desired dimensions for the board, from the radio buttons.
   let fourByFour = document.getElementById("fourByFour");
   if (fourByFour.checked) {
@@ -69,8 +93,6 @@ newBoardBtn.addEventListener("click", async function () {
 
   // Update the found words with the new board's words.
   foundWords = getAllWords(newBoard, dictionary);
-
-  guessedWords = [];
 });
 
 // Read text from given filename and parse the text to create a 2D matrix
@@ -338,7 +360,7 @@ function resizeBoard(board) {
       trs[i].style.fontSize = "140%"; // smaller for 5x5
     }
   }
-  
+
   // Resize the DOM columns.
   if (columns > tableColumns) {
     // More columns in the matrix; add a column
@@ -394,6 +416,14 @@ function deleteColumn(trs, tableRows) {
   }
 }
 
+// Add an element (data) to the list and render it on the DOM.
+function addToList(data) {
+  const list = document.getElementById("wordsList"); // use a different element?
+  let li = document.createElement("li");
+  li.innerText = data;
+  list.appendChild(li);
+}
+
 // Given a list of data, render the values into a list in the Web UI.
 function renderList(data) {
   const list = document.getElementById("wordsList");
@@ -414,4 +444,7 @@ function renderList(data) {
     li.innerText = "This board contains no words!";
     list.appendChild(li);
   }
+
+  guessBtn.disabled = true;
+  guessBox.disabled = true;
 }

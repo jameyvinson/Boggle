@@ -2,9 +2,11 @@ let foundWords;
 let board;
 let dictionary;
 let guessedWords;
+let allPaths;
 
 window.onload = async () => {
   // Render the board from "board.txt" on the web UI.
+
   board = await getBoard(); // load board from "board.txt"
   renderBoard(board);
 
@@ -36,11 +38,26 @@ getWordsBtn.addEventListener("click", function () {
   renderList(foundWords);
 });
 
-// Get and render a new board.
-let getNewBoardBtn = document.getElementById("getNewBoardBtn");
-getNewBoardBtn.addEventListener("click", async function () {
-  let newBoard = getNewBoard();
+// Get and render a new board with dimensions.
+let newBoardBtn = document.getElementById("getNewBoard");
+newBoardBtn.addEventListener("click", async function () {
+  // Get the desired dimensions for the board, from the radio buttons.
+  let fourByFour = document.getElementById("fourByFour");
+  if (fourByFour.checked) {
+    // Four by four.
+    console.log("4x4");
+    n = 4;
+    m = 4;
+  } else {
+    // Five by five.
+    console.log("5x5");
+    n = 5;
+    m = 5;
+  }
 
+  let newBoard = getNewBoard(n, m); // new random board
+
+  // Render the new board.
   renderBoard(newBoard);
 
   document.getElementById("wordsList").innerHTML = ""; // clear the found words list
@@ -167,7 +184,6 @@ async function readTextFile(fileName) {
 // Return: Array of found words.
 function getAllWords(board, dictionaryList) {
   let foundWords = [];
-  console.log(board);
 
   // Cycle through all the letters on the board, element by element, to find the
   // starting letters for all possible strings. Pass starting letter to getWords
@@ -231,7 +247,7 @@ function getWords(
   if (
     validWords.includes(currStr) &&
     !foundWords.includes(currStr) &&
-    currStr.length >= 3
+    currStr.length >= 4
   ) {
     foundWords.push(currStr);
   }
@@ -266,21 +282,20 @@ function isValidPrefix(dictionary, currStr) {
 
 // Generates a new 4x4 board of random letters.
 // Return: 4x4 matrix of letters.
-function getNewBoard() {
+function getNewBoard(n, m) {
   var alphabet = "abcdefghijklmnopqrstuvwxyz"; // lower case, like dictionary words
 
   // Populate the 4x4 board with random letters.
-  var board = [];
-  for (var i = 0; i < 4; i++) {
+  board = [];
+  for (let i = 0; i < n; i++) {
     board[i] = []; // each row is an array
-    for (var j = 0; j < 4; j++) {
+    for (let j = 0; j < m; j++) {
       board[i][j] = alphabet.charAt(
         Math.floor(Math.random() * alphabet.length)
       );
     }
   }
 
-  console.log(board);
   return board;
 }
 
@@ -290,13 +305,92 @@ function renderBoard(board) {
   let trs = table.getElementsByTagName("tr"); // rows
   let tds = null;
 
-  // Populate each table cell with its corresponding board element.
+  resizeBoard(board);
+
+  // Now populate the cells with the board data
   for (let i = 0; i < trs.length; i++) {
     tds = trs[i].getElementsByTagName("td"); // returns array of tds
     for (let j = 0; j < tds.length; j++) {
       let cellStr = board[i][j].toUpperCase();
       tds[j].innerText = cellStr;
     }
+  }
+}
+
+// Given a 2D array, of variable dimensions, update the DOM
+// board table to be the correct size to display the matrix.
+function resizeBoard(board) {
+  let table = document.getElementById("boggleTable");
+  let trs = table.getElementsByTagName("tr"); // rows
+
+  let rows = board.length;
+  let columns = board[0].length;
+  let tableRows = trs.length;
+  let tableColumns = trs[0].getElementsByTagName("td").length;
+
+  // Change the size of the font, depending on the board size.
+  if (columns === 4) {
+    for (let i = 0; i < trs.length; i++) {
+      trs[i].style.fontSize = "150%"; // bigger for 4x4
+    }
+  } else {
+    for (let i = 0; i < trs.length; i++) {
+      trs[i].style.fontSize = "140%"; // smaller for 5x5
+    }
+  }
+  
+  // Resize the DOM columns.
+  if (columns > tableColumns) {
+    // More columns in the matrix; add a column
+    addColumn(trs, tableRows);
+  } else if (columns < tableColumns) {
+    // Fewer columns in the matrix than in the DOM table;
+    // remove a column
+    deleteColumn(trs, tableRows);
+  }
+
+  // Resize the DOM rows.
+  if (rows > tableRows) {
+    addRow(table, columns);
+  } else if (rows < tableRows) {
+    deleteRow(table);
+  }
+}
+
+// Given a reference to the DOM table, and a number of columns in a row,
+// add a row to the table.
+function addRow(table, columns) {
+  // Add a row.
+  let row = table.insertRow();
+  row.style.fontSize = "140%";
+  // Populate the row cells
+  for (let i = 0; i < columns; i++) {
+    row.insertCell();
+  }
+}
+
+// Given a reference to the DOM table's rows, and a number of rows,
+// add a column to the table.
+function addColumn(trs, tableRows) {
+  // Add a column to the table
+  for (let i = 0; i < tableRows; i++) {
+    // "Adding a column" is just adding a cell at the
+    // end of each row.
+    let row = trs[i];
+    row.insertCell();
+  }
+}
+
+// Given a reference to the DOM table, delete a row.
+function deleteRow(table) {
+  table.deleteRow(0);
+}
+
+// Given a reference to the DOM table, delete a column.
+function deleteColumn(trs, tableRows) {
+  // "Removing a column" is actually removing a cell from each row.
+  for (let i = 0; i < tableRows; i++) {
+    trs[i].deleteCell(0); // delete the last cell in a row
   }
 }
 

@@ -66,6 +66,9 @@ newBoardBtn.addEventListener("click", async function () {
   guessedWords = [];
   let newBoard = [];
 
+  // Disable this button until the board is generated.
+  newBoardBtn.disabled = true;
+
   // Get the desired dimensions for the board, from the radio buttons.
   let fourByFour = document.getElementById("fourByFour");
   if (fourByFour.checked) {
@@ -77,6 +80,7 @@ newBoardBtn.addEventListener("click", async function () {
   }
 
   renderBoard(newBoard); // render new board
+  newBoardBtn.disabled = false; // clickable again!
 
   // Get all the variables set up for the new board...
   getWordsBtn.disabled = false;

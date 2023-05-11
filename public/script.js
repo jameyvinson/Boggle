@@ -101,42 +101,6 @@ newBoardBtn.addEventListener("click", async function () {
   foundWords = getAllWords(newBoard, dictionary);
 });
 
-// Read text from given filename and parse the text to create a 2D matrix
-// with the given inputs. Render the matrix on web page.
-// The given file must contain a text-based 2D matrix, where columns are
-// separated by commas and rows are separated by new lines.
-// Return: 2D matrix of characters.
-async function getBoard() {
-  const boardText = await readTextFile("/board.txt");
-  let board = [];
-  let row = 0,
-    column = 0;
-
-  // Populate the board (matrix) with the rows and columns in the file.
-  console.log(boardText);
-  boardText.split("\n").forEach((line) => {
-    if (line === "") return false; // check for last line
-
-    column = 0;
-    board[row] = [];
-
-    // Add each letter in the row to the board matrix.
-    line.split(",").forEach((letter) => {
-      // Remove a line break, if present.
-      if (letter.endsWith("\r")) {
-        letter = letter.replace("\r", "");
-      }
-      board[row][column] = letter.toLowerCase();
-      column++;
-    });
-
-    row++;
-  });
-
-  console.log(board);
-  return board;
-}
-
 // Read the text from "words.txt" and parse the text into an array.
 // Return: Array of valid words.
 async function getDictionary(board) {

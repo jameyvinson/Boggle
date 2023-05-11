@@ -111,7 +111,7 @@ function getFourByFourBoard() {
     "deilrx",
   ];
 
-  return generateBoard(4, 4, boggleCubes);
+  return generateBoard(4, 4, shuffleArray(boggleCubes)); // "Shake" (shuffle) the cubes.
 }
 
 // Generates a new 5x5 board of random letters, chosen from the Boggle
@@ -147,7 +147,12 @@ function getFiveByFiveBoard() {
     "ooottu",
   ];
 
-  return generateBoard(5, 5, bigBoggleCubes);
+  return generateBoard(5, 5, shuffleArray(bigBoggleCubes)); // "Shake" (shuffle) the cubes.
+}
+
+// Given an array, shuffle and return it.
+function shuffleArray(array) {
+  return array.sort((a, b) => 0.5 - Math.random());
 }
 
 // Given the dimensions of a board and the Boggle "cubes" of letters for the

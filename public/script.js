@@ -4,11 +4,12 @@ let dictionary;
 let guessedWords;
 let allPaths;
 
-window.onload = async () => {
-  // Render the board from "board.txt" on the web UI.
+/* ------------- Event Handlers ------------- */
 
+// On load, display a random 4x4 board and get the words from it.
+window.onload = async () => {
   // board = await getBoard(); // load board from "board.txt"
-  let board = getNewBoard(4, 4); // new random board
+  let board = getFourByFourBoard(); // new random board
   renderBoard(board);
 
   dictionary = await getDictionary(board);
@@ -16,19 +17,19 @@ window.onload = async () => {
   guessedWords = [];
 };
 
-// "Click" the guess button when the user presses the "Enter" key
+// "Click" the guess button when the user presses the "Enter" key.
 let guessBox = document.getElementById("guessBox");
 guessBox.addEventListener("keypress", function (event) {
-  // If the user presses the "Enter" key on the keyboard
+  // If the user presses the "Enter" key on the keyboard.
   if (event.key === "Enter") {
-    // Cancel the default action, if needed
+    // Cancel the default action, if needed.
     event.preventDefault();
-    // Trigger the guess button
+    // Trigger the guess button.
     document.getElementById("guessBtn").click();
   }
 });
 
-// Handle the user pressing the guess word button
+// Handle the user pressing the guess word button.
 let guessBtn = document.getElementById("guessBtn");
 guessBtn.addEventListener("click", function () {
   // Take the value in the text box, and blank the text box.
@@ -73,28 +74,24 @@ newBoardBtn.addEventListener("click", async function () {
   guessBox.disabled = false;
   guessBtn.disabled = false;
   guessedWords = [];
+  let newBoard = [];
 
   // Get the desired dimensions for the board, from the radio buttons.
   let fourByFour = document.getElementById("fourByFour");
   if (fourByFour.checked) {
     // Four by four.
     console.log("4x4");
-    n = 4;
-    m = 4;
+    newBoard = getFourByFourBoard();
   } else {
     // Five by five.
     console.log("5x5");
-    n = 5;
-    m = 5;
+    newBoard = getFiveByFiveBoard();
   }
-
-  let newBoard = getNewBoard(n, m); // new random board
 
   // Render the new board.
   renderBoard(newBoard);
 
   document.getElementById("wordsList").innerHTML = ""; // clear the found words list
-
   getWordsBtn.disabled = false;
 
   // Because the board contains new letters, get a new dictionary.
@@ -311,19 +308,82 @@ function isValidPrefix(dictionary, currStr) {
   return isValidPrefix;
 }
 
-// Generates a new 4x4 board of random letters.
+// Generates a new 4x4 board of random letters, chosen from the Boggle
+// cubes.
 // Return: 4x4 matrix of letters.
-function getNewBoard(n, m) {
-  var alphabet = "abcdefghijklmnopqrstuvwxyz"; // lower case, like dictionary words
+function getFourByFourBoard() {
+  // Following are the 16 Boggle cubes from the original Boggle game.
+  let boggleCubes = [
+    "aaeegn",
+    "elrtty",
+    "aoottw",
+    "abbjoo",
+    "ehrtvw",
+    "cimotu",
+    "distty",
+    "eiosst",
+    "delrvy",
+    "achops",
+    "himnqu",
+    "eeinsu",
+    "eeghnw",
+    "affkps",
+    "hlnnrz",
+    "deilrx",
+  ];
 
+  return generateBoard(4, 4, boggleCubes);
+}
+
+// Generates a new 5x5 board of random letters, chosen from the Boggle
+// cubes.
+// Return: 5x5 matrix of letters.
+function getFiveByFiveBoard() {
+  // Following are the 25 Boggle cubes from the Big Boggle game.
+  let bigBoggleCubes = [
+    "aaafrs",
+    "aaeeee",
+    "aafirs",
+    "adennn",
+    "aeeeem",
+    "aeegmu",
+    "aegmnn",
+    "afirsy",
+    "bjkqxz",
+    "ccenst",
+    "ceiilt",
+    "ceilpt",
+    "ceipst",
+    "ddhnot",
+    "dhhlor",
+    "dhlnor",
+    "dhlnor",
+    "eiiitt",
+    "emottt",
+    "ensssu",
+    "fiprsy",
+    "gorrvw",
+    "iprrry",
+    "nootuw",
+    "ooottu",
+  ];
+
+  return generateBoard(5, 5, bigBoggleCubes);
+}
+
+function generateBoard(n, m, cubes) {
   // Populate the 4x4 board with random letters.
   board = [];
   for (let i = 0; i < n; i++) {
     board[i] = []; // each row is an array
     for (let j = 0; j < m; j++) {
-      board[i][j] = alphabet.charAt(
-        Math.floor(Math.random() * alphabet.length)
-      );
+      let cubeIndex = i * n + j;
+      let currentCube = cubes[cubeIndex];
+      let randomNum = Math.floor(Math.random() * cubes[cubeIndex].length);
+      board[i][j] = currentCube.charAt(randomNum);
+      // console.log(
+      //   `Cube: ${currentCube}\nRandom number: ${randomNum}\nLetter: ${board[i][j]}`
+      // );
     }
   }
 
